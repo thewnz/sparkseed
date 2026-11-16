@@ -1,5 +1,5 @@
 {
-  "version": "0.1.5",
-  "downloadUrl": "https://github.com/thewnz/sparkseed-releases/releases/tag/v0.1.5",
-  "notes": "统一图文工作台模型连接，支持恢复待审素材，并改进软件更新检查。"
+  "version": "0.1.8",
+  "downloadUrl": "https://github.com/thewnz/sparkseed-releases/releases/tag/v0.1.8",
+  "notes": "流程图审核界面升级：双栏显示拼接预览与当前模块，新增模块缩略图墙；多引擎自动路由与顶会顶刊质量门槛；只接入一个 API 也能完整生成流程图。"
 }
