@@ -1,103 +1,75 @@
-# Sparkseed（火种）
+<div align="center">
 
-一个 Windows 桌面原型。每条 idea 是一段 Agent 会话。你可以用半句话开场，按需带上剪贴板里的论文原文和论文位置。Agent 每轮给出一道中文追问，你可以选几项、直接用自己的话回答，或跳过。
+<img src="public/brand-mark.png" alt="" width="76">
 
-## 启动
+# Sparkseed · 火种
 
-在项目目录中用 PowerShell 运行。开发环境使用 Node.js 24。
+**把读论文时冒出的问题记下来，带着出处继续研究。**  
+**Capture a question as you read, and keep its source in reach as you investigate.**
+
+[下载 Windows 版 · Download for Windows](https://github.com/thewnz/sparkseed/releases/download/v0.3.0/Sparkseed-0.3.0.exe)　·　[全部版本 · All releases](https://github.com/thewnz/sparkseed/releases)
+
+</div>
+
+Sparkseed 是一款面向研究者的 Windows 桌面工具。读到一个值得追问的判断时，你可以一起留下想法、引文和页码。之后再打开这条记录，既能接着讨论，也能回到 PDF 核对原文，把查到的证据整理成笔记、图表或汇报材料。
+
+Sparkseed is a Windows research workspace for the questions that come up while reading. Save a thought alongside a quotation and page number, then come back to discuss it, check the passage in the PDF, or turn your findings into notes, figures and slides.
+
+## 从一句问题开始 · Start with a question
+
+读到分层采样时，你可能会想：“这个方法对小样本也有效吗？” 按 `Ctrl + Shift + Space` 打开快速记录，把问题写下来。选择「保存并讨论」后，可以围绕采样方法继续追问，也可以先存好，等读完论文再回来。
+
+Suppose a paper makes you wonder whether stratified sampling still helps with a small sample. Press `Ctrl + Shift + Space` to capture the question. Choose **Save and discuss** to explore the sampling method with a connected agent, or save it for your next reading session.
+
+![指南演示：记录一个采样问题并进入讨论。Guide demo: capture a sampling question and discuss it.](docs/media/guide-journey.gif)
+
+## 回到证据所在的那一页 · Trace a claim back to the page
+
+在讨论中选中需要核实的判断，将它加入证据核验台。打开相关论文，选取 PDF 原文并绑定到这条判断。下次整理结论时，可以直接回到对应段落，再看一遍作者的措辞和适用条件。
+
+Select a claim in a discussion and add it to the evidence workspace. Open the relevant paper, highlight the passage and link it to the claim. When you revisit the conclusion, you can return to the source and check the authors’ wording and assumptions.
+
+![指南演示：把讨论中的判断与 PDF 原文关联。Guide demo: link a discussion claim to a passage in a PDF.](docs/media/guide-evidence.gif)
+
+*两段动图均录自应用内「使用指南」的示例演示。Both clips were recorded from the example walkthroughs in the in-app user guide.*
+
+## 工作区里还有什么 · Explore the workspace
+
+| 工作区 · Workspace | 使用场景 | What you can do |
+| --- | --- | --- |
+| 灵感库 · Ideas | 按研究价值筛选想法，在关联星图中重看讨论脉络。 | Filter ideas by research value and revisit related discussions on the idea map. |
+| 文献与研读 · Papers | 导入 PDF，批注原文，或将 2–4 篇论文并排比较后存入笔记。 | Annotate PDFs or compare two to four papers and save the comparison to a note. |
+| 笔记与任务 · Notes & tasks | 用精读、实验或组会模板整理记录，在任务列表里跟踪文献查证。 | Organize reading, experiment and meeting notes, and follow literature checks in the task list. |
+| 科研制图 · Figures & slides | 从数据图、流程图或概念示意开始，审核图稿，再用于汇报。 | Create data charts, flowcharts or concept diagrams, review them and use them in a presentation. |
+
+## 安装与使用 · Install and use
+
+1. 下载并运行 [Sparkseed 0.3.0 for Windows x64](https://github.com/thewnz/sparkseed/releases/download/v0.3.0/Sparkseed-0.3.0.exe)。Download and run the Windows installer.
+2. 打开「快速记录」写下第一条想法，或在「使用指南」中逐步体验上面的演示。Open **Quick Capture** to save your first idea, or follow the demos in **User Guide**.
+3. 记录、阅读和批注可在本地使用。要启用模型追问或翻译，请在「偏好设置 → Agent 接入」配置服务。Capture, reading and annotation work locally. To use AI follow-up questions or translation, connect a provider under **Preferences → Agent access**.
+
+## 从源码运行 · Run from source
+
+在 Windows 上安装 Node.js 24，在仓库根目录打开 PowerShell。  
+Install Node.js 24 on Windows and open PowerShell in the repository root.
 
 ```powershell
 npm.cmd ci
 npm.cmd start
 ```
 
-- 点「新讨论」，发送第一条消息。没有配置 Agent 时，消息仍可保存在本机。
-- 用 `Ctrl+Shift+Space` 或托盘菜单打开主窗口里的「快速记录」。「保存」记录想法并返回原页面。「保存并讨论」打开刚保存的会话。
-- 「听写」使用 Windows 本地语音识别，识别结果进入可编辑草稿。需要兼容的语音组件和麦克风权限。也可在输入框中使用 `Win + H`。
-- 用 `Ctrl+Shift+Alt+Space` 或托盘的「语音快记」直接听写，识别结束后自动保存。讨论中的「说完即发送」可直接提交语音回复，「朗读问题」会读出追问和选项。
-- 从「偏好设置 → 外观」切换主题、强调色、字体、字号和加粗。预览和工作台同时更新。
-- 从「偏好设置 → Agent 接入」配置、测试或选择默认 Agent。CLI 使用已有的本机登录。兼容 API 需要填写协议根路径和模型，例如 `https://example.com/v1`。测试连接时，当前默认 Agent 保持原设置。
-- 从「偏好设置 → 通用」可以更换快速记录的全局快捷键。
-- 主窗口缩窄时会自动切换到图标侧栏，可从侧栏顶部打开讨论记录。宽窗口可拖动侧栏边缘调整宽度，也可聚焦边缘后用方向键调整。应用会记住侧栏宽度、主窗口大小和位置。
-- 从「Idea 库」切换卡片或全幅星图。星云与远景星点是装饰，保存的 Idea 可点击。详情可填写重要性与研究价值评分，星图根据评分显示亮度，根据文字相似度估算距离。
-- 在对话或 Idea 详情打开「研究工作」。配置默认 Agent 后，新 Idea 可自动初查，服务包含本地论文库、Crossref、arXiv 与已配置的学术 MCP。模糊想法先给问题选项，深查使用你确认的问题。结果区分检索线索、摘要和正文引文，显示支持、反例、限制和改进建议。任务可暂停、重试和恢复。
-- 「整理与关联」提供跨轮摘要、互补理由、可编辑的组合草稿和 Memory 更新建议。保存组合时保留两条来源，写入 Memory 前需确认。用选项建立研究方向可从 Memory 编辑页进入。
-- 从「论文库」导入 PDF。可在应用内翻阅和缩放原文，按目录或正文搜索跳页，再把页码和选区带入讨论。扫描件也可以在阅读器中查看。
-- 在 PDF 阅读器选择「原文」「原译对照」或「译文」。可翻译选区、当前页或全文，译文由默认 Agent 生成并保存在本机。全文翻译可停止，重新启动时会复用已保存的页。扫描页需要先有可选文字层才能翻译。
-- 从「偏好设置 → 研究记忆」选择 Soul 或 Memory。确认修改提示后可编辑 Agent 的长期准则和研究背景。保存的内容会随讨论发送给所选 Agent，之前的版本可在历史中恢复。
-- 从「偏好设置 → 研究工具」直接检索 GitHub 公开仓库、论文和公开网页，无需登录或填写 MCP 参数；结果可以带入新讨论。网页来源限制访问时可以一键打开浏览器。已有自定义 MCP 可在需要时切换使用。
-- 在「图文工作台」新建项目后，选择科研绘图或演示文稿。科研流程图依次确认框架、审核素材、整图排版并验收保存。在「偏好设置 → Agent 接入」配置 API 一次，工作台生成设置只选择已接入连接，可分别指定绘图、视觉和领导模型，整图预览支持逐块查看和多光标回放。数据图可从表格绘制，概念示意可另选 GPT Image 生成。在「偏好设置 → 图文技能」可导入自己的绘图技能。参见[科研绘图工作流](docs/科研绘图工作流.md)。
-- 从「偏好设置 → 技能管理」导入或编写 Markdown 技能。在 Idea 详情点击「提炼为技能」可得到草稿，也可交给已接入的 Agent 进一步整理。保存并启用后，技能正文会随讨论发送。
-- 新 Agent 回复下方的「处理过程」可查看本轮上下文、发送给 Agent 的技能、格式检查和耗时。
-- 关闭窗口后，正在生成的追问会在托盘继续。可从托盘菜单完全退出。
-
-## 联网检查更新
-
-在「偏好设置 → 通用 → 软件更新」填写发布方提供的 HTTPS 更新源，再点「检查更新」。发现新版本后可打开下载页。发布方可在 HTTPS 站点放置如下 JSON 清单。
-
-```json
-{"version":"0.1.3","downloadUrl":"https://example.com/sparkseed/releases","notes":"更新说明"}
-```
-
-## Windows 安装包
-
-```powershell
-npm.cmd run dist:win
-```
-
-产物为 `release/Sparkseed-<版本>-win-x64.exe`。安装时可选择目录，安装后创建桌面与开始菜单快捷方式；卸载不会删除 `%APPDATA%\idea-recorder` 里的讨论、论文与设置。当前没有代码签名证书，首次运行可能出现 SmartScreen 提示，需要手动选择「更多信息 → 仍要运行」。
-
-安装版使用 `com.sparkseed.recorder` 作为通知应用标识。可在「偏好设置 → 通用 → 桌面通知」发送测试通知，确认系统通知与专注助手设置。
-
-## 当前范围
-
-原型提供对话、快速记录、原文与页码附件、SQLite 本地保存、后台追问、取消和恢复。Codex 已用真实 CLI 验证生成追问。Claude Code 和 Kimi Code 的真实推理取决于本机登录和模型配置。两种兼容 API 可通过本地模拟服务测试。
-
-自动检索可在「偏好设置 → 通用」关闭。开放 PDF 自动读取目前覆盖 arXiv，每轮最多尝试两份文件、每份最多读取前 32 页。其他论文可使用已取得的摘要，或导入本地 PDF 获取正文页码。[功能与布局验收](功能与布局验收.md) 记录当前验证结果。
+<details>
+<summary>开发命令与致谢 · Development commands and credits</summary>
 
 ```powershell
 npm.cmd test
 npm.cmd run build
+npm.cmd run dist:win
 ```
 
-参考 NeoRead 的 CLI 适配方式。Codex 通过 App Server 的只读临时会话接收完成事件，Claude Code 通过安全模式下的流式 JSON 接收结果，Kimi 通过 ACP 接收文本和结束状态。三个适配器沿用 CLI 自身的登录与模型配置。连接测试会显示启动、会话或等待模型回复等阶段。[NeoRead 仓库](https://github.com/cynicalight/NeoRead)、[Agent 适配设计](https://github.com/cynicalight/NeoRead/blob/main/docs/research/document-agent-cli-adapters.md)
+应用基于 Electron、React、Vite 和 SQLite。CLI 适配参考 [NeoRead](https://github.com/cynicalight/NeoRead)，后台研究任务参考 [DeepSeek SuperAgent](https://github.com/deepseek-ai/dsh-superagent-prototype)。
 
-研究任务参考 DeepSeek SuperAgent 对任务生命周期与后台执行的拆分。Sparkseed 用独立任务记录保存检索计划、进度和结果，并在确认问题后执行深查。[SuperAgent 任务实现](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/src/core/tickets.ts)
+The app uses Electron, React, Vite and SQLite. NeoRead informed the CLI adapters, and DeepSeek SuperAgent informed the background research tasks. See [第三方声明 · Third-party notices](THIRD_PARTY_NOTICES.md).
 
+</details>
 
-# Sparkseed（火种）
-
-Sparkseed 是一个面向研究工作的本地 Windows 应用：灵感记录、论文库、笔记、研究任务与图文工作台集中在一处，并能从研究材料直接生成可编辑的科研图稿。
-
-## 下载
-
-- 最新版：**v0.1.8**（Windows 10/11 x64）
-- 安装包：[Sparkseed-0.1.8-win-x64.exe](https://github.com/thewnz/sparkseed/releases/download/v0.1.8/Sparkseed-0.1.8-win-x64.exe)
-- SHA-256：`50876187250d96d4dac0df5d11d9d4b82eed75c921adedae08530eebd2c7737c`
-- 安装与使用：[使用说明](使用说明.md)
-
-## 主要功能
-
-- 想法记录与追问：从论文与讨论中继续推进研究问题。
-- 论文库、笔记与研究任务：资料本地保存，可检索与引用。
-- 图文工作台：数据图、流程图、概念示意、自由配图；逐块审核、整图排版与导出。
-- 多引擎自动路由：流程图与数据图走可编辑矢量；插画与概念示意在有图像服务时走位图；只接入一个 API 也能完整生成流程图。
-- 顶会顶刊质量门槛：检查字号、线宽、遮挡与配色；不达标先自动修复，必要时改用确定性合规排版。
-
-## 快速开始
-
-1. 下载并运行安装包。
-2. 打开「偏好设置 → Agent 接入」，接入至少一个 API（如 DeepSeek、MiniMax、OpenAI）。
-3. 进入「图文工作台」，新建项目，选择图片类型后生成；流程图按「框架 → 逐块审核 → 整图排版」完成。
-
-## 数据与隐私
-
-研究数据保存在本机资料目录的 SQLite 中；API 密钥由系统安全存储加密。本仓库不包含用户数据，也不分发源码。
-
-## 更新
-
-应用内「偏好设置 → 通用 → 软件更新」可读取本仓库的 `updates.json` 检查新版本。
-
-## 许可与致谢
-
-第三方组件与绘图技能来源见应用内说明及 `THIRD_PARTY_NOTICES.md`。
