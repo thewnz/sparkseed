@@ -1,0 +1,26 @@
+node_modules/
+dist/
+release/
+
+# 本地验收用的临时资料目录（真实资料的副本，不入库）。
+.smoke-profile/
+.agent-shots/
+
+# 论文插图只作本地风格分析，不随仓库分发。
+artifacts/style-benchmark/conference-figures/
+artifacts/style-benchmark/conference-pdfs/
+artifacts/style-benchmark/journal-figures/
+artifacts/style-benchmark/contact-sheet-all.png
+artifacts/style-benchmark/comparison-journal-style.png
+
+# 扩样与运行截图只保留在本地，不随仓库分发。
+artifacts/style-benchmark/expanded-candidates/
+artifacts/style-benchmark/expanded-figures/
+artifacts/style-benchmark/expanded-review-*.jpg
+artifacts/style-benchmark/review-*.jpg
+artifacts/desktop-live/
+artifacts/*.log
+
+# 真实论文面板压力测试含第三方图像，仅本地复核。
+artifacts/style-benchmark/archetype-grid-real.*
+artifacts/style-benchmark/layout-*.jpg

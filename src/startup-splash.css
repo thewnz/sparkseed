@@ -1,0 +1,22 @@
+.startup-splash { position: fixed; inset: 0; z-index: 120; display: grid;
+  place-items: center; padding: 12px; background: var(--canvas); color: var(--ink); }
+.startup-splash::before { content: ''; position: absolute; inset: 0 var(--caption-buttons) auto 0;
+  height: var(--caption-height); -webkit-app-region: drag; }
+.startup-lockup { display: flex; align-items: center; justify-content: center; gap: clamp(5px, 1.8vw, 16px);
+  max-width: 100%; font: 650 clamp(1rem, 5vw, 2.8rem)/1.3 "Segoe UI", system-ui, sans-serif; }
+.startup-mark { display: block; flex: none; width: clamp(30px, 13vw, 70px); aspect-ratio: 1; object-fit: contain; }
+.startup-mark[hidden] { display: none; }
+.startup-wordmark { letter-spacing: -.035em; }
+.startup-wordmark small { margin-left: .2em; font-size: .43em; color: var(--muted); letter-spacing: 0; white-space: nowrap; }
+.startup-splash[data-phase="ready"] :is(.startup-mark, .startup-wordmark) { opacity: 0; }
+.startup-splash[data-phase="enter"] .startup-mark { animation: startup-ignite 1150ms cubic-bezier(.22,.61,.36,1) both; }
+.startup-splash[data-phase="enter"] .startup-wordmark { animation: startup-title 1280ms 300ms cubic-bezier(.22,.61,.36,1) both; }
+.startup-splash[data-phase="hold"] { animation: startup-hold 1450ms linear both; }
+.startup-splash[data-phase="exit"] { animation: startup-leave 580ms ease-in-out both; }
+.startup-splash[data-playing="false"],
+.startup-splash[data-playing="false"] :is(.startup-mark, .startup-wordmark) { animation-play-state: paused; }
+@keyframes startup-ignite { from { opacity: 0; transform: scale(.9); } to { opacity: 1; transform: none; } }
+@keyframes startup-title { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes startup-hold { from, to { opacity: 1; } }
+@keyframes startup-leave { to { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .startup-splash { display: none; } }

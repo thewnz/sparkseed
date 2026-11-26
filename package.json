@@ -1,0 +1,147 @@
+{
+  "name": "idea-recorder",
+  "version": "0.3.0",
+  "private": true,
+  "description": "Sparkseed（火种）· Windows 研究想法记录器",
+  "author": "Sparkseed",
+  "type": "module",
+  "main": "desktop/entry.mjs",
+  "scripts": {
+    "start": "npm run build && electron .",
+    "build": "vite build",
+    "test": "node --test",
+    "pack:win": "npm run build && electron-builder --win --dir",
+    "dist:win": "npm run build:release && electron-builder --win nsis --x64",
+    "build:release": "npm run build -- --minify terser --sourcemap false",
+    "dist:mac": "npm run build:release && electron-builder --mac dmg zip --x64 --arm64",
+    "dist:all": "npm run build:release && electron-builder --win nsis --x64 && electron-builder --mac dmg zip --x64 --arm64"
+  },
+  "dependencies": {
+    "@dagrejs/dagre": "3.1.3",
+    "@fontsource-variable/geist": "^5.3.0",
+    "@fontsource-variable/noto-sans-sc": "^5.3.1",
+    "@fontsource-variable/noto-serif-sc": "^5.3.1",
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "@xmldom/xmldom": "0.9.12",
+    "jszip": "3.10.2",
+    "pdfjs-dist": "^6.5.438",
+    "pptxgenjs": "4.0.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "overrides": {
+    "image-size": "2.1.0"
+  },
+  "devDependencies": {
+    "electron": "^45.3.0",
+    "electron-builder": "26.18.0",
+    "terser": "^5.51.2",
+    "vite": "^8.3.8"
+  },
+  "build": {
+    "appId": "com.sparkseed.recorder",
+    "productName": "Sparkseed",
+    "copyright": "Sparkseed",
+    "directories": {
+      "output": "安装包/Sparkseed-0.3.0",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "desktop/**/*",
+      "src/idea-map.mjs",
+      "src/work-labels.mjs",
+      "THIRD_PARTY_NOTICES.md",
+      "package.json",
+      "!node_modules/pdfjs-dist/**",
+      "!node_modules/@napi-rs/canvas*/**"
+    ],
+    "asar": true,
+    "buildVersion": "0.3.0",
+    "compression": "maximum",
+    "npmRebuild": false,
+    "publish": null,
+    "electronLanguages": [
+      "zh-CN",
+      "en-US"
+    ],
+    "extraResources": [
+      {
+        "from": "public/brand-mark.png",
+        "to": "brand-mark.png"
+      },
+      {
+        "from": "desktop/pdf-worker.mjs",
+        "to": "desktop/pdf-worker.mjs"
+      },
+      {
+        "from": "node_modules/pdfjs-dist",
+        "to": "node_modules/pdfjs-dist"
+      },
+      {
+        "from": "node_modules/@napi-rs",
+        "to": "node_modules/@napi-rs",
+        "filter": [
+          "canvas/**/*",
+          "canvas-${platform}-${arch}*/**/*"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "signExecutable": false,
+      "artifactName": "Sparkseed-0.3.0.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Sparkseed",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerHeaderIcon": "build/icon.ico",
+      "deleteAppDataOnUninstall": false,
+      "runAfterFinish": true
+    },
+    "mac": {
+      "icon": "build/icon.png",
+      "identity": null,
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "arm64"
+          ]
+        },
+        {
+          "target": "dmg",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    }
+  }
+}

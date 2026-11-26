@@ -1,0 +1,321 @@
+/* PDF Surface, Highlight Overlays, Annotations & Paper Note Panel */
+
+.reader-workspace {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* PDF Canvas & Selection Floating Toolbar */
+.pdf-page-surface {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pdf-page-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 0 24px;
+}
+
+.pdf-sheet {
+  position: relative;
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 10px 32px #0f14261f, 0 0 0 1px #00000012;
+}
+
+.pdf-sheet canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+}
+
+.pdf-annotation-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.pdf-annotation-mark {
+  position: absolute;
+  border-radius: 2px;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--annotation-color, #f2c94c) 42%, transparent);
+}
+
+.pdf-annotation-mark[data-kind="underline"] {
+  background: transparent;
+  border-radius: 0;
+  border-bottom: 2px solid var(--annotation-color, #4a90d9);
+}
+
+.pdf-annotation-mark[data-kind="note"] {
+  background: color-mix(in srgb, var(--annotation-color, #7bbf8a) 26%, transparent);
+  border-bottom: 2px dashed var(--annotation-color, #7bbf8a);
+}
+
+.pdf-annotation-mark[data-kind="question"] {
+  background: color-mix(in srgb, var(--annotation-color, #b07bd9) 24%, transparent);
+  border-bottom: 2px dotted var(--annotation-color, #b07bd9);
+}
+
+.pdf-annotation-mark[data-active="true"] {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.pdf-selection-tools {
+  position: absolute;
+  z-index: 12;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px;
+  max-width: 360px;
+  padding: 4px;
+  border-radius: 10px;
+  border: 1px solid var(--edge);
+  background: var(--paper);
+  box-shadow: 0 12px 32px #0d11222e;
+}
+
+.pdf-selection-tools button {
+  min-height: 27px;
+  padding: 3px 8px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  font-size: 0.76rem;
+  font-weight: 550;
+}
+
+.pdf-selection-tools button:hover:not(:disabled) {
+  background: var(--wash);
+  color: var(--accent);
+}
+
+.pdf-loading, .pdf-loading-inline {
+  padding: 18px;
+  font-size: 0.84rem;
+  text-align: center;
+}
+
+.pdf-outline ul {
+  list-style: none;
+  margin: 0;
+  padding-left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pdf-outline > ul {
+  padding-left: 0;
+}
+
+.pdf-outline button {
+  width: 100%;
+  min-height: 28px;
+  padding: 4px 7px;
+  text-align: left;
+  font-size: 0.8rem;
+  border-radius: 6px;
+}
+
+/* Annotations Panel */
+.paper-annotations-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.annotation-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.annotation-subbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.annotation-search {
+  flex: 1;
+  min-height: 31px;
+}
+
+.annotation-bookmark {
+  min-height: 31px;
+  padding: 3px 8px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.annotation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.annotation-card {
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: 10px;
+  padding: 9px 11px;
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.annotation-card[data-kind="highlight"] { border-left-color: #eab308; }
+.annotation-card[data-kind="underline"] { border-left-color: #3b82f6; }
+.annotation-card[data-kind="note"] { border-left-color: #22a06b; }
+.annotation-card[data-kind="question"] { border-left-color: #9333ea; }
+
+.annotation-card[data-active] {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+.annotation-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.annotation-jump {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  min-height: 0;
+  border: 0;
+  background: transparent;
+  font-size: 0.74rem;
+  color: var(--muted);
+}
+
+.annotation-kind {
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: var(--wash);
+  color: var(--accent);
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.annotation-actions {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.annotation-actions button {
+  width: 24px;
+  height: 24px;
+  min-height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--muted);
+  display: grid;
+  place-items: center;
+}
+
+.annotation-actions button:hover:not(:disabled) {
+  background: var(--hover);
+  color: var(--ink);
+}
+
+.annotation-actions svg {
+  width: 12px;
+  height: 12px;
+}
+
+.annotation-card blockquote {
+  margin: 0;
+  padding: 6px 9px;
+  border-radius: 6px;
+  background: var(--canvas);
+  font-size: 0.81rem;
+  line-height: 1.6;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+.annotation-note {
+  font-size: 0.84rem;
+  line-height: 1.7;
+  cursor: pointer;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.annotation-add-note {
+  align-self: flex-start;
+  min-height: 24px;
+  padding: 1px 7px;
+  border: 0;
+  background: transparent;
+  font-size: 0.75rem;
+  color: var(--accent);
+}
+
+.annotation-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Paper Note Panel */
+.paper-note-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 280px;
+}
+
+.paper-note-panel .rich-toolbar {
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 5px 8px;
+}
+
+.paper-note-editor {
+  flex: 1;
+  min-height: 220px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 11px 13px;
+  background: var(--paper);
+  font-size: 0.92rem;
+  line-height: 1.85;
+  overflow: auto;
+  overflow-wrap: anywhere;
+}
+
+.paper-note-editor:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+
+.paper-note-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.74rem;
+  color: var(--muted);
+}

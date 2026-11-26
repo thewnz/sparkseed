@@ -1,0 +1,100 @@
+:root { --motion-orbit: cubic-bezier(.16, 1, .3, 1); }
+.workspace-motion-layer { position: fixed; inset: 0; pointer-events: none; z-index: 100; overflow: hidden; }
+.workspace-click-ring {
+  position: absolute;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--accent);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 28%, transparent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .preferences, .paper-library-shell, .notes-library-shell, .research-dashboard, .studio-page:not([data-expanded="true"]) {
+    animation: orbit-page-arrive 0.38s var(--motion-orbit) both;
+  }
+  .preferences-content { animation: orbit-content-arrive 0.28s var(--motion-orbit) both; }
+  .launchpad-hero h1 { animation: orbit-title-arrive 0.55s var(--motion-orbit) both; }
+  .launchpad-stage .capture { animation: orbit-page-arrive 0.48s 0.05s var(--motion-orbit) backwards; }
+  .launchpad-starters-grid { animation: orbit-content-arrive 0.45s 0.12s var(--motion-orbit) backwards; }
+
+  .library-grid .library-card, .connection-grid .connection-card {
+    animation: orbit-card-arrive 0.42s var(--motion-orbit) backwards;
+    animation-delay: calc(var(--arrival-order, 0) * 36ms);
+  }
+  :is(.library-grid, .connection-grid) > :nth-child(2) { --arrival-order: 1; }
+  :is(.library-grid, .connection-grid) > :nth-child(3) { --arrival-order: 2; }
+  :is(.library-grid, .connection-grid) > :nth-child(4) { --arrival-order: 3; }
+  :is(.library-grid, .connection-grid) > :nth-child(n+5) { --arrival-order: 4; }
+
+  :is(.studio-dialog, .star-preferences, .research-warning, .command-palette-dialog)[open] {
+    animation: orbit-dialog-arrive 0.28s var(--motion-orbit) both;
+  }
+  .chat .message { animation: orbit-message-arrive 0.3s var(--motion-orbit) backwards; }
+
+  .dock-item .dock-icon-frame svg { transition: transform 0.26s var(--motion-orbit); }
+  .dock-item:hover .dock-icon-frame svg { transform: translateY(-2px); }
+
+  button.primary:not(.send-icon) {
+    transition: transform 0.18s var(--motion-orbit), box-shadow 0.2s ease, background-color 0.16s ease;
+  }
+  button.primary:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px color-mix(in srgb, var(--accent) 22%, transparent);
+  }
+  button.primary:active:not(:disabled) { transform: translateY(0) scale(0.98); }
+
+  .studio-composer-box { transition: border-color 0.22s ease, box-shadow 0.28s ease; }
+  .studio-composer-box:focus-within {
+    border-color: color-mix(in srgb, var(--accent) 55%, var(--edge));
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 12%, transparent), var(--shadow);
+  }
+
+  :is(.bento-idea-card, .starter-bento-card, .kpi-bento-tile, .library-card, .research-module, .connection-card, .studio-canvas, .guide-feature-card) {
+    position: relative;
+    isolation: isolate;
+  }
+  :is(.bento-idea-card, .starter-bento-card, .kpi-bento-tile, .library-card, .research-module, .connection-card, .studio-canvas, .guide-feature-card)::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 1;
+    background: radial-gradient(220px circle at var(--pointer-x, 50%) var(--pointer-y, 30%), color-mix(in srgb, var(--accent) 11%, transparent), transparent 74%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  :is(.bento-idea-card, .starter-bento-card, .kpi-bento-tile, .library-card, .research-module, .connection-card, .studio-canvas, .guide-feature-card)[data-pointer-lit]::before {
+    opacity: 1;
+  }
+
+  .card-library .library-card { transition: transform 0.28s var(--motion-orbit), border-color 0.2s ease, box-shadow 0.25s ease; }
+  .card-library .library-card:hover { transform: translateY(-3px); }
+
+  .studio-stage[aria-busy="true"] { position: relative; overflow: hidden; }
+  .studio-stage[aria-busy="true"]::after {
+    content: '';
+    position: absolute;
+    inset: 50% auto auto 50%;
+    width: min(200px, 60%);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 1px solid color-mix(in srgb, var(--accent) 18%, transparent);
+    border-top-color: var(--accent);
+    pointer-events: none;
+    animation: orbit-working 2.6s linear infinite;
+  }
+
+  @keyframes orbit-page-arrive { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  @keyframes orbit-content-arrive { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @keyframes orbit-title-arrive { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  @keyframes orbit-card-arrive { from { opacity: 0; transform: translateY(14px) scale(0.985); } to { opacity: 1; transform: none; } }
+  @keyframes orbit-dialog-arrive { from { opacity: 0; transform: translateY(14px) scale(0.96); } to { opacity: 1; transform: none; } }
+  @keyframes orbit-message-arrive { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @keyframes orbit-working { from { transform: translate(-50%, -50%) rotate(0); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workspace-motion-layer { display: none; }
+}

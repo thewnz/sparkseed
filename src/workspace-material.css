@@ -1,0 +1,613 @@
+/* Glass Material Tokens, Deep-Space WebGL Star Map & Floating HUD */
+
+:root {
+  --sidebar-glass: color-mix(in srgb, var(--sidebar) 86%, transparent);
+  --glass-face: color-mix(in srgb, var(--paper) 72%, transparent);
+  --glass-strong: color-mix(in srgb, var(--paper) 88%, transparent);
+  --glass-edge: color-mix(in srgb, var(--edge) 85%, transparent);
+  --glass-highlight: #ffffffb8;
+  --glass-shadow: 0 12px 36px #201b3d12;
+  --glass-depth: 0 12px 34px #18143026;
+  --glass-accent: color-mix(in srgb, var(--accent) 13%, transparent);
+}
+
+:root:is([data-palette="graphite"], [data-palette="black"]) {
+  --glass-highlight: #ffffff12;
+  --glass-shadow: 0 14px 38px #00000038;
+  --glass-depth: 0 14px 36px #00000060;
+  --glass-accent: color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+/* Cosmic Star Surface Overrides */
+.workspace[data-surface="stars"] {
+  background: radial-gradient(ellipse at 12% 82%, #241f46, transparent 46%), #060913;
+}
+
+.workspace[data-surface="stars"] :is(.app-dock, .workspace-topbar) {
+  --ink: #f2effb;
+  --muted: #b8bbd0;
+  --accent: #d2c8ff;
+  --hover: #b8c2ff1f;
+  --wash: #b6a4ff2e;
+  --line: #c6cdf522;
+  --edge: #c6cdf538;
+  --paper: #161a2dd9;
+  --sidebar: #111526cc;
+  color: var(--ink);
+}
+
+.workspace-star-background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.space-background {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #060913;
+}
+
+.space-depth {
+  position: absolute;
+  inset: -5%;
+  transform: translate3d(var(--space-x, 0), var(--space-y, 0), 0) scale(var(--space-scale, 1));
+  filter: brightness(var(--space-brightness, 1));
+  transition: transform 0.12s linear;
+}
+
+.space-nebula, .space-stars {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.space-nebula {
+  opacity: 0.65;
+}
+
+.space-webgl {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.space-background[data-renderer="webgl"] :is(.space-nebula, .space-stars) {
+  opacity: 0;
+}
+
+.space-twinkle {
+  position: absolute;
+  left: var(--star-x);
+  top: var(--star-y);
+  width: var(--star-size);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  opacity: calc(var(--star-peak) * 0.78);
+  background: radial-gradient(circle, rgba(var(--star-color), 1) 0 8%, rgba(var(--star-color), 0.36) 16%, transparent 64%);
+}
+
+.space-twinkle[data-flare="true"] {
+  background: radial-gradient(circle, #fff9f4 0 4%, rgba(var(--star-color), 0.82) 7%, rgba(var(--star-color), 0.25) 23%, transparent 70%);
+}
+
+.space-twinkle[data-flare="true"]::before,
+.space-twinkle[data-flare="true"]::after {
+  content: '';
+  position: absolute;
+  inset: 50% 9% auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(var(--star-color), 0.76), transparent);
+}
+
+.space-twinkle[data-flare="true"]::after {
+  transform: rotate(90deg) scaleX(0.72);
+}
+
+.space-meteor {
+  display: none;
+}
+
+/* Cosmic Star Library Layout */
+.cosmic-library {
+  position: relative;
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+  gap: 0;
+  overflow: hidden;
+  color: #f2effb;
+  --star-glass: #15192fd1;
+  --star-edge: #9da8f03d;
+}
+
+.cosmic-library .library-toolbar {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  right: 16px;
+  z-index: 8;
+  padding: 0;
+  border-bottom: 0;
+  pointer-events: none;
+}
+
+.cosmic-library .library-toolbar > * {
+  pointer-events: auto;
+}
+
+.star-hud-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 13px;
+  border-radius: 999px;
+  border: 1px solid var(--star-edge);
+  background: var(--star-glass);
+  backdrop-filter: blur(16px);
+  color: #f2effb;
+}
+
+.star-hud-brand h1 {
+  font-size: 0.94rem;
+  font-weight: 600;
+}
+
+.star-hud-brand svg {
+  color: #d2c8ff;
+}
+
+.cosmic-library .library-views,
+.cosmic-library .library-toolbar .inline-actions > button {
+  background: var(--star-glass);
+  border-color: var(--star-edge);
+  color: #e9e6f8;
+  backdrop-filter: blur(16px);
+}
+
+.cosmic-library .library-views > button {
+  color: #c2c5da;
+}
+
+.cosmic-library .library-views > button[aria-pressed="true"] {
+  background: #a4a8f036;
+  color: #ffffff;
+}
+
+/* Interactive Star Map Canvas */
+.idea-map {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.map-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+}
+
+.map-stage:active {
+  cursor: grabbing;
+}
+
+.map-stage:focus-visible {
+  outline: 2px solid #b5b2f8;
+  outline-offset: -3px;
+}
+
+.map-world {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(100%, calc(100vh * var(--map-aspect, 1.6)));
+  aspect-ratio: var(--map-aspect, 1.6);
+  transform: translate(-50%, -50%) scale(var(--map-zoom, 1)) translate(var(--map-x, 0%), var(--map-y, 0%));
+  transform-origin: center center;
+}
+
+.map-links {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.map-link {
+  fill: none;
+  stroke: #b9c4ff;
+  stroke-width: 1.1;
+  stroke-dasharray: 3 4;
+}
+
+.map-confirmed-link {
+  stroke: #dfd6ff;
+  stroke-width: 1.6;
+}
+
+/* Star Nodes */
+.star-node {
+  position: absolute;
+  translate: -50% -50%;
+  width: 38px;
+  height: 38px;
+  min-height: 38px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.star-node:hover:not(:disabled) {
+  background: transparent;
+}
+
+.star-radiance {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.star-halo {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(214, 222, 255, calc(var(--idea-light, 0.75) * 0.72)) 0%, rgba(160, 175, 255, 0.2) 45%, transparent 72%);
+}
+
+.star-rays {
+  position: absolute;
+  inset: 2px;
+  background:
+    linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.85), transparent) center / 100% 1.2px no-repeat,
+    linear-gradient(0deg, transparent, rgba(255, 255, 255, 0.85), transparent) center / 1.2px 100% no-repeat;
+  opacity: 0.72;
+}
+
+.star-core {
+  position: relative;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 12px #d8e0ff, 0 0 24px #9aa8ff;
+}
+
+.star-node[aria-pressed="true"] .star-core {
+  width: 10px;
+  height: 10px;
+  box-shadow: 0 0 16px #ffffff, 0 0 32px #b6adff;
+}
+
+.map-label {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 50%;
+  translate: -50% 0;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: #12162be6;
+  border: 1px solid #a8b4f847;
+  color: #f5f4ff;
+  font-size: 0.74rem;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 6px 18px #00000054;
+}
+
+.map-empty {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  translate: -50% -50%;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--star-glass);
+  border: 1px solid var(--star-edge);
+  color: #d6d8ea;
+  font-size: 0.86rem;
+}
+
+/* Star HUD Controls & Quick Locator */
+.map-hud-bottom-left {
+  position: absolute;
+  left: 16px;
+  bottom: 14px;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.map-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--star-edge);
+  background: var(--star-glass);
+  backdrop-filter: blur(16px);
+  color: #c8cbe0;
+  font-size: 0.74rem;
+}
+
+.map-star-locator {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 10px;
+  height: 31px;
+  border-radius: 999px;
+  border: 1px solid var(--star-edge);
+  background: var(--star-glass);
+  backdrop-filter: blur(16px);
+  color: #e9e6f8;
+}
+
+.map-star-locator svg {
+  width: 13px;
+  height: 13px;
+  color: #c8c0ff;
+}
+
+.map-star-locator select {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 2px 4px;
+  font-size: 0.75rem;
+  width: auto;
+  max-width: 170px;
+}
+
+.map-star-locator option {
+  background: #171b30;
+  color: #f2effb;
+}
+
+.map-controls {
+  position: absolute;
+  right: 16px;
+  bottom: 14px;
+  z-index: 6;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 999px;
+  border: 1px solid var(--star-edge);
+  background: var(--star-glass);
+  backdrop-filter: blur(16px);
+}
+
+.map-controls button {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  min-height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #e6e4f6;
+}
+
+.map-controls button:hover:not(:disabled) {
+  background: #ffffff1a;
+}
+
+.map-zoom-value {
+  padding: 0 6px;
+  font-size: 0.73rem;
+  color: #c5c8de;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Idea Inspector (Used in both Card Gallery & Star Map) */
+.map-inspector {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  padding: 16px;
+  border-radius: 15px;
+  border: 1px solid var(--edge);
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: var(--glass-depth);
+}
+
+.star-library .map-inspector {
+  position: absolute;
+  right: 16px;
+  bottom: 56px;
+  z-index: 9;
+  width: min(350px, calc(100% - 32px));
+  max-height: calc(100% - 124px);
+  overflow: auto;
+  background: var(--star-glass);
+  border-color: var(--star-edge);
+  color: #f2effb;
+  backdrop-filter: blur(20px);
+}
+
+.star-library .map-inspector .muted,
+.star-library .map-inspector .map-detail-meta {
+  color: #b8bbd2;
+}
+
+.map-inspector-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.map-inspector-head h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.map-detail-meta {
+  margin-top: 3px;
+  font-size: 0.74rem;
+  color: var(--muted);
+}
+
+.map-preview {
+  font-size: 0.84rem;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+
+.map-inspector-scores {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.map-nearby {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  padding-top: 6px;
+  border-top: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+  font-size: 0.75rem;
+}
+
+.map-nearby > span {
+  opacity: 0.72;
+}
+
+.map-nearby button {
+  min-height: 25px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  font-size: 0.74rem;
+  color: inherit;
+}
+
+.map-inspector-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  padding-top: 4px;
+}
+
+/* Star Preferences Dialog */
+.star-preferences {
+  width: min(380px, calc(100vw - 28px));
+  padding: 18px 20px;
+  border-radius: 16px;
+  border: 1px solid #9da8f045;
+  background: #15192ef2;
+  color: #f2effb;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 24px 56px #00000070;
+}
+
+.star-preferences::backdrop {
+  background: #04061066;
+}
+
+.star-preferences header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.star-preferences header h2 {
+  font-size: 1.04rem;
+}
+
+.star-preferences header button {
+  color: #c5c8de;
+}
+
+.star-preferences label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 7px 0;
+  font-size: 0.85rem;
+}
+
+.star-preferences select {
+  width: auto;
+  background: #1e2340;
+  border-color: #9da8f03d;
+  color: #f2effb;
+}
+
+.star-brightness {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.star-render-info {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid #9da8f028;
+  font-size: 0.74rem;
+  color: #aeb2ca;
+  font-variant-numeric: tabular-nums;
+}
+
+.workspace[data-star-motion="paused"] :is(.space-twinkle, .star-halo, .star-rays) {
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .space-twinkle { animation: star-scintillation var(--star-duration) var(--star-delay) ease-in-out infinite; }
+  .star-halo { animation: idea-halo var(--idea-twinkle-duration) var(--idea-twinkle-delay) ease-in-out infinite; }
+  .star-rays { animation: idea-rays var(--idea-twinkle-duration) var(--idea-twinkle-delay) ease-in-out infinite; }
+  @keyframes star-scintillation {
+    0%, 100% { opacity: calc(var(--star-peak) * 0.30); transform: scale(0.73); }
+    42% { opacity: var(--star-peak); transform: scale(1.14); }
+    65% { opacity: calc(var(--star-peak) * 0.53); transform: scale(0.9); }
+    79% { opacity: calc(var(--star-peak) * 0.73); transform: scale(1); }
+  }
+  @keyframes idea-halo {
+    0%, 100% { opacity: 0.46; transform: scale(0.86); }
+    48% { opacity: 0.97; transform: scale(1.11); }
+  }
+  @keyframes idea-rays {
+    0%, 100% { opacity: 0.48; }
+    48% { opacity: 1; }
+  }
+}
+
+@container workspace (max-width: 680px) {
+  .map-status span:nth-child(2) {
+    display: none;
+  }
+}

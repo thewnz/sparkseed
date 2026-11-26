@@ -1,0 +1,102 @@
+.workspace { isolation: isolate; }
+.universe-background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  color: #7774c9;
+  background:
+    radial-gradient(ellipse at 18% 10%, #eae8ff 0%, transparent 54%),
+    radial-gradient(ellipse at 84% 82%, #e6f1ff 0%, transparent 56%),
+    linear-gradient(165deg, #fafbfe, #f2f4fa);
+  --universe-star: #6a67c4;
+  --universe-line: #8b88d6;
+}
+.universe-nebula {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(74px);
+  opacity: 0.38;
+  animation: universe-drift 42s ease-in-out infinite alternate;
+}
+.universe-nebula.one {
+  width: 46vw; height: 46vw; left: -12vw; top: -14vw;
+  background: radial-gradient(circle, #bbb5ff 0%, transparent 66%);
+}
+.universe-nebula.two {
+  width: 52vw; height: 52vw; right: -18vw; bottom: -22vw;
+  background: radial-gradient(circle, #aed6ff 0%, transparent 66%);
+  animation-delay: -12s;
+}
+.universe-nebula.three {
+  width: 30vw; height: 30vw; left: 38%; top: 32%;
+  background: radial-gradient(circle, #ffddc7 0%, transparent 66%);
+  animation-delay: -22s;
+}
+.universe-lines { position: absolute; inset: 0; width: 100%; height: 100%; }
+.universe-lines line { stroke: var(--universe-line); stroke-width: 0.08; opacity: 0.26; }
+.universe-stars { position: absolute; inset: 0; opacity: 0.46; }
+.universe-stars span {
+  position: absolute;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 5px currentColor;
+  animation: universe-twinkle 8s ease-in-out infinite;
+}
+.universe-stars span[data-layer="0"] { filter: blur(0.2px); }
+.universe-stars span[data-layer="2"] { box-shadow: 0 0 8px currentColor; }
+.universe-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.16;
+  mix-blend-mode: soft-light;
+  background-image: radial-gradient(#000 0.5px, transparent 0.6px);
+  background-size: 3px 3px;
+}
+
+:root[data-palette="paper"] .universe-background {
+  color: #a37a52;
+  background:
+    radial-gradient(ellipse at 20% 8%, #f4e6d4 0%, transparent 58%),
+    radial-gradient(ellipse at 82% 84%, #f8efe0 0%, transparent 60%),
+    linear-gradient(165deg, #fbf6ec, #f4ecdf);
+  --universe-star: #a37a52;
+  --universe-line: #c09a72;
+}
+:root[data-palette="paper"] .universe-stars { opacity: 0.32; }
+
+:root:is([data-palette="graphite"], [data-palette="black"]) .universe-background {
+  color: #e2e0ff;
+  background:
+    radial-gradient(ellipse at 16% 8%, #221d4e 0%, transparent 58%),
+    radial-gradient(ellipse at 84% 84%, #102140 0%, transparent 60%),
+    radial-gradient(ellipse at 50% 50%, #131328 0%, transparent 72%),
+    linear-gradient(165deg, #0b0d17, #0d101d);
+  --universe-star: #e2e0ff;
+  --universe-line: #8d89d6;
+}
+:root:is([data-palette="graphite"], [data-palette="black"]) .universe-stars { opacity: 0.88; }
+:root:is([data-palette="graphite"], [data-palette="black"]) .universe-nebula { opacity: 0.36; }
+:root:is([data-palette="graphite"], [data-palette="black"]) .universe-nebula.one {
+  background: radial-gradient(circle, #5b4fd6 0%, transparent 66%);
+}
+:root:is([data-palette="graphite"], [data-palette="black"]) .universe-nebula.two {
+  background: radial-gradient(circle, #2f5bb8 0%, transparent 66%);
+}
+:root:is([data-palette="graphite"], [data-palette="black"]) .universe-nebula.three {
+  background: radial-gradient(circle, #7a3fa6 0%, transparent 66%);
+}
+:root[data-palette="black"] .universe-grain { opacity: 0.1; }
+
+@keyframes universe-twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.25); }
+}
+@keyframes universe-drift {
+  from { transform: translate3d(-2%, -1%, 0) scale(1); }
+  to { transform: translate3d(2%, 2%, 0) scale(1.06); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .universe-stars span, .universe-nebula { animation: none !important; }
+}

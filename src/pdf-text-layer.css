@@ -1,0 +1,36 @@
+.pdf-sheet { --scale-round-x: 1px; --scale-round-y: 1px; }
+
+.pdf-sheet .textLayer {
+  --min-font-size: 1;
+  --text-scale: calc(var(--total-scale-factor) * var(--min-font-size));
+  position: absolute;
+  inset: 0 auto auto 0;
+  overflow: clip;
+  line-height: 1;
+  text-align: initial;
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-size-adjust: none;
+  transform-origin: top left;
+}
+
+.pdf-sheet .textLayer :is(span, br) {
+  position: absolute;
+  color: transparent;
+  white-space: pre;
+  cursor: text;
+  user-select: text;
+  transform-origin: top left;
+}
+
+.pdf-sheet .textLayer span:not(.markedContent) {
+  font-size: calc(var(--text-scale) * var(--font-height, 0px));
+  transform: rotate(var(--rotate, 0deg)) scaleX(var(--scale-x, 1)) scale(calc(1 / var(--min-font-size)));
+}
+
+.pdf-sheet .textLayer .markedContent { display: contents; }
+.pdf-sheet .textLayer ::selection { color: transparent; background: #678bef59; }
+.pdf-sheet .textLayer br::selection { background: transparent; }
+.pdf-sheet .textLayer[data-main-rotation="90"] { transform: rotate(90deg) translateY(-100%); }
+.pdf-sheet .textLayer[data-main-rotation="180"] { transform: rotate(180deg) translate(-100%, -100%); }
+.pdf-sheet .textLayer[data-main-rotation="270"] { transform: rotate(270deg) translateX(-100%); }
